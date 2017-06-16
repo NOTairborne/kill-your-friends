@@ -9,6 +9,7 @@ public class Player : MonoBehaviour {
         
     {
         public int maxHealth = 100;
+        public bool isDead = false;
 
         private int _curHealth;
         public int curHealth
@@ -29,15 +30,18 @@ public class Player : MonoBehaviour {
 
     private void Update()
     {
-        if (transform.position.y <= fallBoundary)
-            DamagePlayer (999999999);
+        if (transform.position.y <= fallBoundary) 
+        {
+            DamagePlayer(999999999);
+        }
     }
 
     public void DamagePlayer (int damage)
     {
         stats.curHealth -= damage;
-        if (stats.curHealth <= 0)
+        if (stats.curHealth <= 0 && !stats.isDead)
         {
+            stats.isDead = true;
             GameMaster.KillPlayer(this);
         }
     }

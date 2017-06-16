@@ -23,52 +23,13 @@ public class EnemyAI : MonoBehaviour
     // The waypoint we are currently moving towards
     private int currentWaypoint = 0;
     private bool searchingForPlayer = false;
+
     void Start()
     {
         seeker = GetComponent<Seeker>();
         rb = GetComponent<Rigidbody2D>();
-        if (target == null)
-        {
-            if (!searchingForPlayer)
-            {
-                searchingForPlayer = true;
-                StartCoroutine(SearchForPlayer());
-            }
-            return;
-        }
-        StartCoroutine(UpdatePath());
     }
-    IEnumerator SearchForPlayer()
-    {
-        GameObject sResult = GameObject.FindWithTag("Player");
-        if (sResult == null)
-        {
-            yield return new WaitForSeconds(0.5f);
-            StartCoroutine(SearchForPlayer());
-        }
-        else
-        {
-            target = sResult.transform;
-            searchingForPlayer = false;
-            StartCoroutine(UpdatePath());
-        }
-    }
-    IEnumerator UpdatePath()
-    {
-        if (target == null)
-        {
-            if (!searchingForPlayer)
-            {
-                searchingForPlayer = true;
-                StartCoroutine(SearchForPlayer());
-            }
-            yield return false;
-        }
-        // Start a new path to the target position, return the result to the OnPathComplete method
-        seeker.StartPath(transform.position, target.position, OnPathComplete);
-        yield return new WaitForSeconds(1f / updateRate);
-        StartCoroutine(UpdatePath());
-    }
+
     public void OnPathComplete(Path p)
     {
         if (!p.error)
@@ -77,40 +38,32 @@ public class EnemyAI : MonoBehaviour
             currentWaypoint = 0;
         }
     }
+
     void FixedUpdate()
     {
-        if (target == null)
+        if (path == null || currentWaypoint >= path.vectorPath.Count)
         {
-            if (!searchingForPlayer)
+            GameObject sResult = GameObject.FindWithTag("Player");
+            if (sResult != null)
             {
-                searchingForPlayer = true;
-                StartCoroutine(SearchForPlayer());
+                target = sResult.transform;
+                seeker.StartPath(transform.position, target.position, OnPathComplete);
             }
-            return;
         }
-        //TODO: Always look at player?
-        if (path == null)
-            return;
-        if (currentWaypoint >= path.vectorPath.Count)
+        else
         {
-            if (pathIsEnded)
+            //Direction to the next waypoint
+            Vector3 dir = (path.vectorPath[currentWaypoint] - transform.position).normalized;
+            dir *= speed * Time.fixedDeltaTime;
+            //Move the AI
+            rb.AddForce(dir, fMode);
+            float dist = Vector3.Distance(transform.position, path.vectorPath[currentWaypoint]);
+            if (dist < nextWaypointDistance)
+            {
+                currentWaypoint++;
                 return;
-            // I add this part. When reach the end we gave it players new position.
-            StartCoroutine(SearchForPlayer());
-            pathIsEnded = true;
-            return;
+            }
         }
-        pathIsEnded = false;
-        //Direction to the next waypoint
-        Vector3 dir = (path.vectorPath[currentWaypoint] - transform.position).normalized;
-        dir *= speed * Time.fixedDeltaTime;
-        //Move the AI
-        rb.AddForce(dir, fMode);
-        float dist = Vector3.Distance(transform.position, path.vectorPath[currentWaypoint]);
-        if (dist < nextWaypointDistance)
-        {
-            currentWaypoint++;
-            return;
-        }
+
     }
 }

@@ -10,8 +10,8 @@ public class Player : MonoBehaviour {
     {
         public int maxHealth = 100;
         public bool isDead = false;
+        private int _curHealth = 100;
 
-        private int _curHealth;
         public int curHealth
         {
             get { return _curHealth; }
@@ -43,6 +43,7 @@ public class Player : MonoBehaviour {
         {
             stats.isDead = true;
             GameMaster.KillPlayer(this);
+
         }
     }
 

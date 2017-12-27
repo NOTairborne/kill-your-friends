@@ -5,11 +5,10 @@ public class Enemy : MonoBehaviour {
 
     [System.Serializable]
     public class EnemyStats
-
     {
         public int maxHealth = 100;
+        private int _curHealth = 100;
 
-        private int _curHealth;
         public int curHealth
         {
             get { return _curHealth; }

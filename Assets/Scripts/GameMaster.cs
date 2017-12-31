@@ -32,6 +32,8 @@ public class GameMaster : MonoBehaviour {
         if (lives == 0)
         {
             yield return new WaitForSeconds(spawnDelay);
+            lives = 3;
+            kills = 0;
             SceneManager.LoadScene("Game Over", LoadSceneMode.Single);
         }
         else

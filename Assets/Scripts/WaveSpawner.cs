@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class WaveSpawner : MonoBehaviour {
 
@@ -21,6 +22,8 @@ public class WaveSpawner : MonoBehaviour {
     public Transform[] spawnPoints;
 
     public float timeBetweenWaves = 5f;
+    public string nextLevel = "";
+
     private float waveCountdown;
 
     private float searchCountdown = 1;
@@ -74,7 +77,7 @@ public class WaveSpawner : MonoBehaviour {
         {
             nextWave = 0;
             Debug.Log("you win, now les do it again.");
-
+            SceneManager.LoadScene(nextLevel, LoadSceneMode.Single);
         }
         else
         {

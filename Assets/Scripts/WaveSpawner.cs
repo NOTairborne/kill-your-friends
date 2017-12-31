@@ -74,6 +74,7 @@ public class WaveSpawner : MonoBehaviour {
         {
             nextWave = 0;
             Debug.Log("you win, now les do it again.");
+
         }
         else
         {

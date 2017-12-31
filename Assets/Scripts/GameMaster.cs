@@ -32,7 +32,7 @@ public class GameMaster : MonoBehaviour {
         if (lives == 0)
         {
             yield return new WaitForSeconds(spawnDelay);
-            SceneManager.LoadScene("Intro", LoadSceneMode.Single);
+            SceneManager.LoadScene("Game Over", LoadSceneMode.Single);
         }
         else
         {

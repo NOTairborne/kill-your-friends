@@ -49,7 +49,9 @@ public class Player : MonoBehaviour {
 
     public void PlayFootStepSound()
     {
-        
+        Debug.Log("Hi");
+        var audioSource = GetComponent<AudioSource>();
+        audioSource.Play();
     }
 
 }
